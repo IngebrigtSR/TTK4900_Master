@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 from kinematics import kinematics
 import numpy as np
 import serialuno
+import time
 
 if __name__ == '__main__':
     
@@ -49,7 +50,8 @@ if __name__ == '__main__':
     #     actuatorpostest[i] = leglength
     
     # print(actuatorpostest)
-    squareorbit = np.array([[7.5, 7.5],
+    squareorbit = np.array([[0, 0],
+                            [7.5, 7.5],
                             [7.5, 6.5],
                             [7.5, 5.5],
                             [7.5, 4.5],
@@ -57,6 +59,7 @@ if __name__ == '__main__':
                             [7.5, 2.5],
                             [7.5, 1.5],
                             [7.5, 0.5],
+                            [7.5, 0],
                             [7.5, -0.5],
                             [7.5, -1.5],
                             [7.5, -2.5],
@@ -72,6 +75,7 @@ if __name__ == '__main__':
                             [2.5, -7.5],
                             [1.5, -7.5],
                             [0.5, -7.5],
+                            [0, -7.5],
                             [-0.5, -7.5],
                             [-1.5, -7.5],
                             [-2.5, -7.5],
@@ -87,6 +91,7 @@ if __name__ == '__main__':
                             [-7.5, -2.5],
                             [-7.5, -1.5],
                             [-7.5, -0.5],
+                            [-7.5, 0],
                             [-7.5, 0.5],
                             [-7.5, 1.5],
                             [-7.5, 2.5],
@@ -102,6 +107,7 @@ if __name__ == '__main__':
                             [-2.5, 7.5],
                             [-1.5, 7.5],
                             [-0.5, 7.5],
+                            [0, 7.5],
                             [0.5, 7.5],
                             [1.5, 7.5],
                             [2.5, 7.5],
@@ -109,28 +115,88 @@ if __name__ == '__main__':
                             [4.5, 7.5],
                             [5.5, 7.5],
                             [6.5, 7.5],
-                            [7.5, 7.5]])
+                            [7.5, 7.5]
+                            ])
     
-    squaredirdis = test.makeDirectionDistanceList(squareorbit, 10)
+    smallsquare = np.array([[0, 0],
+                           [1,1],
+                           [1,0],
+                           [1, -1],
+                           [0, -1],
+                           [-1, -1],
+                           [-1, 0],
+                           [-1, 1],
+                           [0, 1],
+                           [1, 1]])
     
+    
+    N = np.zeros((len(smallsquare), 1))
+    for i in range(len(smallsquare)):
+        N[i] = i
+    
+    squaredirdis = test.makeDirectionDistanceList(smallsquare, 1)
+    
+    #Her har vi hovedmistenkte
     squareactuatorlist = testkin.listLegLengths(squaredirdis) 
-    #listLegLengths scrambler skålformen gitt av dirdis
     
     print(squareactuatorlist)
     
-    plt.scatter(*zip(*squareorbit))
+    plt.scatter(*zip(*smallsquare))
+    #plt.title("A square orbital test route")
     plt.show()
     
-    X, Y, Z = squareactuatorlist[:,0], squareactuatorlist[:,1], squareactuatorlist[:,2]
+    X1, Y1, Z1 = squaredirdis[:,0], squaredirdis[:,1], squaredirdis[:,2]
     
     # Plot X,Y,Z
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    ax.plot_trisurf(X, Y, Z, color='white', edgecolors='grey', alpha=0.5)
+    ax.plot_trisurf(X1, Y1, Z1, color='white', edgecolors='grey', alpha=0.5)
+    #ax.set_title('Directions and distances for each point in the square test route')
+    ax.set_xlabel('$Roll$')
+    ax.set_ylabel('$Pitch$')
+    ax.set_zlabel('$Distance$')
+    ax.scatter(X1, Y1, Z1, c='red')
+    plt.show()
+    
+    X, Y, Z, W = squareactuatorlist[:,0], squareactuatorlist[:,1], squareactuatorlist[:,2], squareactuatorlist[:,3]
+    
+    # Plot X,Y,Z
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    #ax.plot_trisurf(X, Y, Z, color='white', edgecolors='grey', alpha=0.5)
+    #ax.set_title('The lengths of the actuators controlling the direction')
+    ax.set_xlabel('$Actuator 1$')
+    ax.set_ylabel('$Actuator 2$')
+    ax.set_zlabel('$Actuator 3$')
     ax.scatter(X, Y, Z, c='red')
     plt.show()
     
+    plt.scatter(N, X)
+    #plt.title("Actuator 1")
+    plt.xlabel("Point number")
+    plt.ylabel("Actuator length")
+    plt.show()
+    
+    plt.scatter(N, Y)
+    #plt.title("Actuator 2")
+    plt.xlabel("Point number")
+    plt.ylabel("Actuator length")
+    plt.show()
+    
+    plt.scatter(N, Z)
+    #plt.title("Actuator 3")
+    plt.xlabel("Point number")
+    plt.ylabel("Actuator length")
+    plt.show()
+    
+    plt.scatter(N, W)
+    #plt.title("Actuator 4")
+    plt.xlabel("Point number")
+    plt.ylabel("Actuator length")
+    plt.show()
+    
     serialuno.serialtransmit(squareactuatorlist)
+
     
     #print(squaredirdis)
     # print(squareactuatorlist)

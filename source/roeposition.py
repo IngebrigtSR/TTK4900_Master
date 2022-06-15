@@ -37,6 +37,7 @@ class detector():
             process.start()
 
         self.cam = cv2.VideoCapture()
+        self.camheight = 40
         print("init done")
 
 
@@ -193,7 +194,7 @@ class detector():
 
 
 
-    def distanceFromPixels(self,img,centerList,h):
+    def distanceFromPixels(self,img,centerList,camheight):
         ### Finds the distance in cm given a list of placements and distance, cartesian coordinates ###
 
         # Settings for the current camera
@@ -231,12 +232,12 @@ class detector():
             roecoordinates[pixel][1] = y
         return roecoordinates
     
-    def makeDirectionDistanceList(self, roecoordinates, robotHeight):
+    def makeDirectionDistanceList(self, roecoordinates, camheight):
         dirdis = np.zeros((len(roecoordinates), 3))
         for i in range(len(roecoordinates)):
-            roll = np.degrees(np.arctan((roecoordinates[i][1]/robotHeight)))
-            pitch = np.degrees(np.arctan((roecoordinates[i][0]/robotHeight)))
-            distance = np.sqrt(roecoordinates[i][0]**2 + roecoordinates[i][1]**2 + robotHeight**2)
+            roll = np.arctan((roecoordinates[i][1]/camheight))
+            pitch = np.arctan((roecoordinates[i][0]/camheight))
+            distance = np.sqrt(roecoordinates[i][0]**2 + roecoordinates[i][1]**2 + camheight**2)
             dirdis[i][0] = roll
             dirdis[i][1] = pitch
             dirdis[i][2] = distance
