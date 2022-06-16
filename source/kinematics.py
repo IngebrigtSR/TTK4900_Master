@@ -56,28 +56,11 @@ class kinematics():
         R_p = [R_p_1, R_p_2, R_p_3]
         return R_p
     
-    def calcRotationNome(self, roll, pitch, yaw):
+    def calcRotationNome(self, angle, radius):
         
-        # h=10;                       #%avstand fra plate ned til rogn
-        # x=4;                        #%rognets posisjon i x
-        # y=4;                        #%rognets posisjon i y
-        # rogn=x+y*1i;                #%kompleks bare for Ã¥ bruke matlabfunksjonalitet
-        # rognradius=abs(rogn);       #%avstand fra sentrum i rognemÃ¦ren
-        # pitch=np.arctan(rognradius/h);   #%rotasjon om x-akse
-        # yaw=angle(rogn)-pi/2;       #%rotasjon om z-akse
-        #actuator_init = 
-        
-        # np.array([[0, 1, 0], 
-        #           [-np.sqrt(3)/2, -1/2, 0], 
-        #           [np.sqrt(3)/2, -1/2, 0]])
-        
-        P = np.array([[1, 0, 0], 
-                      [0, np.cos(pitch), -np.sin(pitch)],
-                      [0, np.sin(pitch), np.cos(pitch)]])  #%rotasjonsmatrise for pitch
-        R = np.array([[np.cos(roll), 0, -np.sin(roll)],
-                      [0, 1, 0],
-                      [np.sin(roll), 0, np.cos(roll)]]);           #%rotasjonsmatrise for yaw
-        R_p_Nome = np.matmul(R, P); #%aktuatorenens sluttsposisjon, pitche fÃ¸rst for riktig rognradius, sÃ¥ yawe til korrekt rognvinkel
+        R_p_Nome = np.array([[cos(theta)+x^2*(1-cos(theta)), x*y*(1-cos(theta))-z*sin(theta), x*z*(1-cos(theta))+y*sin(theta)],
+                             [y*x*(1-cos(theta))+z*sin(theta),cos(theta)+y^2*(1-cos(theta)),y*z*(1-cos(theta))-x*sin(theta)],
+                             [z*x*(1-cos(theta))-y*sin(theta),z*y*(1-cos(theta))+x*sin(theta),cos(theta)+z^2*(1-cos(theta))]])
         
         return R_p_Nome
     #Eksperimentell løsning fra Morten Andreas Nome
@@ -119,7 +102,7 @@ class kinematics():
                         [0, 1, 0, 0],
                         [0, 0, 1, dis],
                         [0, 0, 0, 1]]) @ P
-        l_4 = ((((np.sqrt((P2[2][2] - P[2][2])**2) - self.minactuatorlength) / self.strokelength))*180) + 130
+        l_4 = (np.sqrt((P2[2][2] - P[2][2])**2) / self.strokelength)*90
         return l_4
     
     def listLegLengths(self, dirdislist):
@@ -138,6 +121,21 @@ class kinematics():
             listleglengths[i] = leglength
             
         return listleglengths
+    
+    # def positionFromActuatorLengths(self, actuators):
+        
+    #     dirActuators = actuators[:, [0, 1, 2]]
+    #     dis = actuators[:, 3]
+    #     pos = np.zeros(len(dis), 3)
+        
+    #     for i in range(len(dis)):
+            
+        
+    #     for i in range(len(dis)):
+    #         diractuators
+    
+    # def calcWorkspace(self, ):
+        #lag et array med alle mulige actuatorlengder oppløsning 0.1
 
 
 def run():

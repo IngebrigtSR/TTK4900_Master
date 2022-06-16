@@ -13,6 +13,7 @@ from kinematics import kinematics
 import numpy as np
 import serialuno
 import time
+import testTools
 
 if __name__ == '__main__':
     
@@ -118,30 +119,20 @@ if __name__ == '__main__':
                             [7.5, 7.5]
                             ])
     
-    smallsquare = np.array([[0, 0],
-                           [1,1],
-                           [1,0],
-                           [1, -1],
-                           [0, -1],
-                           [-1, -1],
-                           [-1, 0],
-                           [-1, 1],
-                           [0, 1],
-                           [1, 1]])
     
     
-    N = np.zeros((len(smallsquare), 1))
-    for i in range(len(smallsquare)):
+    N = np.zeros((len(squareorbit), 1))
+    for i in range(len(squareorbit)):
         N[i] = i
     
-    squaredirdis = test.makeDirectionDistanceList(smallsquare, 1)
+    squaredirdis = test.makeDirectionDistanceList(squareorbit, 10)
     
     #Her har vi hovedmistenkte
     squareactuatorlist = testkin.listLegLengths(squaredirdis) 
     
     print(squareactuatorlist)
     
-    plt.scatter(*zip(*smallsquare))
+    plt.scatter(*zip(*squareorbit))
     #plt.title("A square orbital test route")
     plt.show()
     
@@ -163,7 +154,7 @@ if __name__ == '__main__':
     # Plot X,Y,Z
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    #ax.plot_trisurf(X, Y, Z, color='white', edgecolors='grey', alpha=0.5)
+    ax.plot_trisurf(X, Y, Z, color='white', edgecolors='grey', alpha=0.5)
     #ax.set_title('The lengths of the actuators controlling the direction')
     ax.set_xlabel('$Actuator 1$')
     ax.set_ylabel('$Actuator 2$')
@@ -195,7 +186,20 @@ if __name__ == '__main__':
     plt.ylabel("Actuator length")
     plt.show()
     
-    serialuno.serialtransmit(squareactuatorlist)
+    circle = testTools.Testcircle()
+    
+    res = 60
+    testcurve1 = circle.makeCurve(90, 0, res)
+    testcurve2 = circle.makeCurve(90, 120, res)
+    testcurve3 = circle.makeCurve(90, 240, res)
+    
+    testcirclematrix = circle.makeFig(testcurve1, testcurve2, testcurve3)
+    
+    
+    
+    print(testcirclematrix)
+    
+    serialuno.serialtransmit(testcirclematrix)
 
     
     #print(squaredirdis)
