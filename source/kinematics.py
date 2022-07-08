@@ -25,15 +25,15 @@ class kinematics():
         self.strokelength = 10
         
         self.p_1 = np.array([self.r, 0, 0])
-        self.p_2 = np.array([-0.5*self.r, (np.sqrt(3)/2)*self.r, 0])
-        self.p_3 = np.array([-0.5*self.r, -(np.sqrt(3)/2)*self.r, 0])
+        self.p_2 = np.array([self.r*np.cos(2*np.pi/3), self.r*np.sin(2*np.pi/3), 0])
+        self.p_3 = np.array([self.r*np.cos(4*np.pi/3), self.r*np.sin(4*np.pi/3), 0])
 
         self.p = np.array([self.p_1, self.p_2, self.p_3, [1, 1, 1]]) 
         self.p_e = np.array([self.p_1, self.p_2, self.p_3]) 
         
         self.b_1 = np.array([self.R, 0, 0])
-        self.b_2 = np.array([-0.5*self.R, (np.sqrt(3)/2)*self.R, 0])
-        self.b_3 = np.array([-0.5*self.R, -(np.sqrt(3)/2)*self.R, 0])
+        self.b_2 = np.array([self.R*np.cos(2*np.pi/3), self.R*np.sin(2*np.pi/3), 0])
+        self.b_3 = np.array([self.R*np.cos(4*np.pi/3), self.R*np.sin(4*np.pi/3), 0])
 
         self.b = np.array([self.b_1, self.b_2, self.b_3, [1, 1, 1]])
         self.b_e = np.array([self.b_1, self.b_2, self.b_3])
@@ -56,11 +56,16 @@ class kinematics():
         R_p = [R_p_1, R_p_2, R_p_3]
         return R_p
     
-    def calcRotationNome(self, angle, radius):
+    def calcRotationNome(self, roepos, height):
+        x = roepos[0]
+        y = roepos[1]
+        z = height
+        theta = np.arctan(y/x)
         
-        R_p_Nome = np.array([[cos(theta)+x^2*(1-cos(theta)), x*y*(1-cos(theta))-z*sin(theta), x*z*(1-cos(theta))+y*sin(theta)],
-                             [y*x*(1-cos(theta))+z*sin(theta),cos(theta)+y^2*(1-cos(theta)),y*z*(1-cos(theta))-x*sin(theta)],
-                             [z*x*(1-cos(theta))-y*sin(theta),z*y*(1-cos(theta))+x*sin(theta),cos(theta)+z^2*(1-cos(theta))]])
+        
+        R_p_Nome = np.array([[np.cos(theta)+x^2*(1-np.cos(theta)), x*y*(1-np.cos(theta))-z*np.sin(theta), x*z*(1-np.cos(theta))+y*np.sin(theta)],
+                              [y*x*(1-np.cos(theta))+z*np.sin(theta), np.cos(theta)+y^2*(1-np.cos(theta)),y*z*(1-np.cos(theta))-x*np.sin(theta)],
+                              [z*x*(1-np.cos(theta))-y*np.sin(theta),z*y*(1-np.cos(theta))+x*np.sin(theta), np.cos(theta)+z^2*(1-np.cos(theta))]])
         
         return R_p_Nome
     #Eksperimentell løsning fra Morten Andreas Nome

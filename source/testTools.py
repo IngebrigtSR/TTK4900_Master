@@ -34,10 +34,15 @@ def run():
     testcurve1 = test.makeCurve(90, 0, res)
     testcurve2 = test.makeCurve(90, 120, res)
     testcurve3 = test.makeCurve(90, 240, res)
+    
+    testcurve1 = np.delete(testcurve1, 0)
+    testcurve2 = np.delete(testcurve2, 0)
+    testcurve3 = np.delete(testcurve3, 0)
+    
     print(testcurve1)
-    N = np.zeros(res)
+    N = np.zeros(res-1)
                  
-    for i in range(1, res):
+    for i in range(1, 99):
         N[i] = i
     
     plt.scatter(N, testcurve1)
